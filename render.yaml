@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: language-companion
+    runtime: python
+    buildCommand: |
+      pip install -r backend/requirements.txt &&
+      cd frontend && npm install && npm run build && cp -r dist ../backend/
+    startCommand: gunicorn backend.app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FLASK_ENV
+        value: production
